@@ -1,6 +1,6 @@
 import React, { Component, useContext } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-import Auth from "./components/auth";
+import WhitehatAuth from "./components/Auth";
 import "./assets/scss/main.scss";
 import { UserContext, UserProvider } from "./components/AuthContext";
 
@@ -13,7 +13,7 @@ class App extends Component {
         return (
             <>
                 <UserProvider>
-                    <Auth />
+                    <WhitehatAuth />
                 </UserProvider>
             </>
         );
