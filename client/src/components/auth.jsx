@@ -3,8 +3,10 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "dotenv/config";
 import { Button } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
+// import { UserContext, UserProvider } from "./UserContext";
+import { UserContext } from "./UserContext";
+
 (function () {
     const api_Key = process.env.REACT_APP_APIKEY;
     const auth_Domain = process.env.REACT_APP_AUTHDOMAIN;
@@ -40,11 +42,12 @@ class WhitehatAuth extends Component {
         this.handleGoogleLogIn = this.handleGoogleLogIn.bind(this);
         this.handleLogOut = this.handleLogOut.bind(this);
     }
+    static contextType = UserContext;
 
     componentDidMount() {
         firebase.auth().onAuthStateChanged((user) => {
             this.setState({ userData: user, isLoggedIn: !!user });
-            console.log(firebase.auth().currentUser);
+            console.log("Current User", firebase.auth().currentUser);
         });
     }
 
@@ -56,21 +59,8 @@ class WhitehatAuth extends Component {
             .signInWithPopup(provider)
             .then((result) => {
                 var token = result.credential.accessToken;
+                var refreshToken = result.refreshToken;
                 var user = result.user;
-                this.setState({
-                    isLoggedIn: true,
-                    userData: user,
-                });
-            })
-            .catch(function (error) {
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                var email = error.email;
-                var credential = error.credential;
-                console.log(errorCode, errorMessage, email, credential);
-            })
-            .then(() => {
-                const user = this.state.userData;
                 let x = user.email.split("@")[0];
                 let y = user.email.split("@")[1];
                 if (
@@ -83,7 +73,29 @@ class WhitehatAuth extends Component {
                     );
                     return;
                 }
-                axios.post();
+                (async () => {
+                    let res = await axios.post(
+                        "http://localhost:5000/googleauth",
+                        { gat: token, grt: refreshToken },
+                        { headers: { "content-type": "application/json" } }
+                    );
+                    if (res.data === user.email) {
+                        this.setState({
+                            isLoggedIn: true,
+                            userData: user,
+                        });
+                        return;
+                    }
+                    firebase.auth().signOut();
+                    window.alert("Login unsuccessful. Identity not verified.");
+                })();
+            })
+            .catch(function (error) {
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                var email = error.email;
+                var credential = error.credential;
+                console.log(errorCode, errorMessage, email, credential);
             });
     };
     handleLogOut() {
@@ -117,6 +129,7 @@ class WhitehatAuth extends Component {
                             Welcome {this.state.userData.displayName}
                             <Button
                                 variant="primary"
+                                className="m-2"
                                 onClick={() => this.handleLogOut()}>
                                 Log out!
                             </Button>
@@ -130,6 +143,7 @@ class WhitehatAuth extends Component {
                         <span>
                             <Button
                                 variant="primary"
+                                className="m-2"
                                 onClick={() => this.handleGoogleLogIn()}>
                                 Login
                             </Button>

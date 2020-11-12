@@ -1,1 +1,106 @@
 @import "~bootstrap/scss/bootstrap";
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap");
+* {
+    margin: 0;
+    padding: 0;
+}
+.root {
+    font-size: 17px;
+}
+.page {
+    height: 100vh;
+    overflow: hidden;
+    font-family: "Poppins", sans-serif;
+    background-color: #f9f9f9;
+    position: relative;
+}
+.Home {
+    background-image: url("../img/homeillustration.svg");
+    padding-top: 10rem;
+    background-position: 125% 110%;
+    background-repeat: no-repeat;
+    background-size: 40%;
+    text-align: center;
+    #prompt {
+        color: #34499e;
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+        display: inline-block;
+        font-weight: 500;
+    }
+    .WhiteHatBlue {
+        position: absolute;
+        top: 5%;
+        right: 5%;
+        max-height: 10rem;
+    }
+    .auth {
+        // ../assets/img/homeillustration.svg
+        margin: auto;
+        width: fit-content;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        // justify-content: start;
+        .step {
+            width: fit-content;
+            position: relative;
+            margin: 1rem;
+            margin-left: 5rem;
+            border: 0;
+            padding: 0;
+            box-shadow: 0 3px 20px rgba(0, 0, 0, 0.11);
+            background: none;
+            img {
+                width: 30ch;
+            }
+
+            &::before {
+                border-radius: 50%;
+                padding: 0.5rem;
+                height: 2.5rem;
+                width: 2.5rem;
+                background-color: #34499e;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                left: -5rem;
+            }
+            &:nth-child(1),
+            &:nth-child(2) {
+                &::after {
+                    content: " ";
+                    height: 2.75rem;
+                    border: 1px #0b288b solid;
+                    position: absolute;
+                    top: 100;
+                    left: -3.8rem;
+                    margin-top: -0.35rem;
+                }
+            }
+            &.google::before {
+                content: "1";
+            }
+            &.discord::before {
+                content: "2";
+            }
+            &.git::before {
+                content: "3";
+            }
+            &.disabled,
+            &.completed {
+                filter: brightness(0.99);
+                cursor: default;
+            }
+            &.disabled::before {
+                background-color: #7180ba;
+            }
+            &.completed::before {
+                background-color: rgb(105, 219, 105);
+            }
+            &.completed::after {
+                border: 1px solid rgb(105, 219, 105);
+            }
+        }
+    }
+}
