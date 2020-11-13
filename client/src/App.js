@@ -1,20 +1,23 @@
-import React from "react";
-import "./App.css";
+import React, { Component, useContext } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-import gitAuth from "./components/GitAuth";
-import Home from "./components/Home";
+import WhitehatAuth from "./components/Auth";
+import "./assets/scss/main.scss";
+import { UserContext, UserProvider } from "./components/AuthContext";
 
-function App() {
-    return (
-        <>
-            <BrowserRouter>
-                <Switch>
-                    <Route path="/discordauth" component={gitAuth}></Route>
-                    {/* <Route exact path="/" component={() => <Home />} /> */}
-                </Switch>
-            </BrowserRouter>
-        </>
-    );
+class App extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {};
+    }
+    render() {
+        return (
+            <>
+                <UserProvider>
+                    <WhitehatAuth />
+                </UserProvider>
+            </>
+        );
+    }
 }
 
 export default App;
