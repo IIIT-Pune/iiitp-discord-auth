@@ -1,6 +1,6 @@
+var admin = require("firebase-admin");
 const fetch = require("node-fetch");
 require("dotenv/config");
-
 module.exports = {
     discordAuthUrl: function (id) {
         return (
@@ -12,7 +12,7 @@ module.exports = {
     },
 
     discordAuth: async function (id, code) {
-        const guildid=process.env.DISCORD_GUILD_ID;
+        const guildid = process.env.DISCORD_GUILD_ID;
 
         const data = {
             client_id: process.env.DISCORD_CLIENT_ID,
@@ -44,25 +44,25 @@ module.exports = {
         console.log(userinfo);
 
         res = await fetch(
-                "https://discordapp.com/api/v8/guilds/" +
-                    guildid +
-                    "/members/" +
-                    userinfo.id,
-                {
-                    method: "PUT",
-                    body: JSON.stringify({
-                        access_token: info.access_token,
-                        nick: "Bappi3",
-                        roles: ["775829778237358112"]
-                    }),
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bot ` + process.env.DISCORD_TOKEN,
-                    },
-                }
-            );
+            "https://discordapp.com/api/v8/guilds/" +
+                guildid +
+                "/members/" +
+                userinfo.id,
+            {
+                method: "PUT",
+                body: JSON.stringify({
+                    access_token: info.access_token,
+                    nick: "Bappi3",
+                    roles: ["775829778237358112"],
+                }),
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bot ` + process.env.DISCORD_TOKEN,
+                },
+            }
+        );
         console.log(res);
-        if(res.status === 204){
+        if (res.status === 204) {
             res = await fetch(
                 "https://discordapp.com/api/v8/guilds/" +
                     guildid +
@@ -72,7 +72,7 @@ module.exports = {
                     method: "PATCH",
                     body: JSON.stringify({
                         nick: "Bappi2",
-                        roles: ["775829778237358112"]
+                        roles: ["775829778237358112"],
                     }),
                     headers: {
                         "Content-Type": "application/json",
@@ -82,9 +82,17 @@ module.exports = {
             );
             console.log(res);
         }
+        let customTokenRes = null;
+        await admin
+            .auth()
+            .createCustomToken(userinfo.id, {
+                provider: "discord.com",
+                name: userinfo.email,
+                discord: true,
+            })
+            .then((customToken) => (customTokenRes = customToken))
+            .catch((error) => console.log("Firebase error", error));
 
-        return userinfo;
+        return { user: userinfo, jwt: customTokenRes };
     },
 };
-
-
