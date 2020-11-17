@@ -14,12 +14,12 @@
     background-color: #f9f9f9;
     position: relative;
 }
-.Home {
+.Auth {
     background-image: url("../img/homeillustration.svg");
     padding-top: 10rem;
-    background-position: 125% 110%;
+    background-position: 100% 100%;
     background-repeat: no-repeat;
-    background-size: 40%;
+    background-size: auto 30vh;
     text-align: center;
     #prompt {
         color: #34499e;
@@ -35,13 +35,11 @@
         max-height: 10rem;
     }
     .auth {
-        // ../assets/img/homeillustration.svg
         margin: auto;
         width: fit-content;
         height: 100%;
         display: flex;
         flex-direction: column;
-        // justify-content: start;
         .step {
             width: fit-content;
             position: relative;
@@ -73,23 +71,23 @@
                     height: 2.75rem;
                     border: 1px #0b288b solid;
                     position: absolute;
-                    top: 100;
+                    top: 100%;
                     left: -3.8rem;
                     margin-top: -0.35rem;
                 }
             }
             &.google::before {
-                content: "1";
+                content: "2";
             }
             &.discord::before {
-                content: "2";
+                content: "1";
             }
             &.git::before {
                 content: "3";
             }
             &.disabled,
             &.completed {
-                filter: brightness(0.99);
+                filter: brightness(0.97);
                 cursor: default;
             }
             &.disabled::before {

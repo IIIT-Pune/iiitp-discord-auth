@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="485" height="82" viewBox="0 0 485 82">
-  <g id="Group_12" data-name="Group 12" transform="translate(-3578 -1193.849)">
+  <g id="Group_16" data-name="Group 16" transform="translate(-3578 -1193.849)">
     <g id="button" transform="translate(3578 1193.349)">
       <g id="button-bg">
         <rect id="Rectangle_431" data-name="Rectangle 431" width="485" height="82" rx="2" transform="translate(0 0.5)" fill="#fff"/>
       </g>
     </g>
-    <text id="Link_GitHub" data-name="Link GitHub" transform="translate(3685 1248.849)" fill="#5771e2" font-size="36" font-family="Futura-Medium, Futura" font-weight="500"><tspan x="0" y="0">Link GitHub</tspan></text>
+    <text id="Link_GitHub" data-name="Link GitHub" transform="translate(3685 1246.849)" fill="#5771e2" font-size="34" font-family="Poppins-Medium, Poppins" font-weight="500"><tspan x="0" y="0">Link GitHub</tspan></text>
     <path id="icon-github" d="M26.4,0C11.823,0,0,11.092,0,24.772,0,35.718,7.564,45,18.056,48.28c1.318.229,1.745-.539,1.745-1.191V42.477c-7.344,1.5-8.873-2.923-8.873-2.923A6.693,6.693,0,0,0,8,35.929c-2.4-1.538.183-1.5.183-1.5a5.518,5.518,0,0,1,4.046,2.554c2.354,3.786,6.175,2.692,7.682,2.058a5.142,5.142,0,0,1,1.676-3.311c-5.863-.636-12.027-2.76-12.027-12.25a9.269,9.269,0,0,1,2.719-6.649,8.4,8.4,0,0,1,.257-6.556s2.218-.665,7.262,2.539a26.611,26.611,0,0,1,13.22,0c5.04-3.2,7.253-2.539,7.253-2.539a8.394,8.394,0,0,1,.26,6.556,9.244,9.244,0,0,1,2.717,6.649c0,9.515-6.175,11.61-12.054,12.223A5.735,5.735,0,0,1,33,40.29v6.8c0,.659.422,1.433,1.762,1.189C45.246,45,52.8,35.714,52.8,24.772,52.8,11.092,40.98,0,26.4,0Z" transform="translate(3600 1210.849)"/>
   </g>
 </svg>

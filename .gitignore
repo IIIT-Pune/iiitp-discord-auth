@@ -1,3 +1,6 @@
 /node_modules
 client/src/prevApp.js
 .env
+.DS_Store
+server/serviceAccountKey.json
+server/serviceAccountKey.json
