@@ -1,0 +1,12 @@
+var admin = require("firebase-admin");
+const serviceAccountKey = require("./serviceAccountKey.json");
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccountKey),
+});
+
+admin
+    .auth()
+    .verifyIdToken("idToken")
+    .then((claims) => {
+        console.log(claims);
+    });

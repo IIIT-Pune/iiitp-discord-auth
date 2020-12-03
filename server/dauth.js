@@ -12,8 +12,6 @@ module.exports = {
     },
 
     discordAuth: async function (id, code) {
-        const guildid = process.env.DISCORD_GUILD_ID;
-
         const data = {
             client_id: process.env.DISCORD_CLIENT_ID,
             client_secret: process.env.DISCORD_CLIENT_SECRET,
@@ -39,49 +37,9 @@ module.exports = {
                 authorization: `${info.token_type} ${info.access_token}`,
             },
         });
-
         userinfo = await res.json(); //id,username,discriminator
         console.log(userinfo);
 
-        res = await fetch(
-            "https://discordapp.com/api/v8/guilds/" +
-                guildid +
-                "/members/" +
-                userinfo.id,
-            {
-                method: "PUT",
-                body: JSON.stringify({
-                    access_token: info.access_token,
-                    nick: "Bappi3",
-                    roles: ["775829778237358112"],
-                }),
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bot ` + process.env.DISCORD_TOKEN,
-                },
-            }
-        );
-        console.log(res);
-        if (res.status === 204) {
-            res = await fetch(
-                "https://discordapp.com/api/v8/guilds/" +
-                    guildid +
-                    "/members/" +
-                    userinfo.id,
-                {
-                    method: "PATCH",
-                    body: JSON.stringify({
-                        nick: "Bappi2",
-                        roles: ["775829778237358112"],
-                    }),
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bot ` + process.env.DISCORD_TOKEN,
-                    },
-                }
-            );
-            console.log(res);
-        }
         let customTokenRes = null;
         await admin
             .auth()
@@ -89,8 +47,12 @@ module.exports = {
                 provider: "discord.com",
                 name: userinfo.email,
                 discord: true,
+                discordAccessToken: info.access_token,
             })
-            .then((customToken) => (customTokenRes = customToken))
+            .then((customToken) => {
+                customTokenRes = customToken;
+                // console.log(customToken);
+            })
             .catch((error) => console.log("Firebase error", error));
 
         return { user: userinfo, jwt: customTokenRes };

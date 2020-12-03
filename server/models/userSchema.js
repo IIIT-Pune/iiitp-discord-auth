@@ -2,15 +2,15 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
+    firebaseUid: {
+        type: String,
+        default: "",
+    },
     name: {
         type: String,
         default: "",
     },
-    googleUsername: {
-        type: String,
-        default: "",
-    },
-    googleEmail: {
+    gmail: {
         type: String,
         default: "",
     },
@@ -18,19 +18,11 @@ const userSchema = new Schema({
         type: String,
         default: "",
     },
-    discordName: {
-        type: String,
-        default: "",
-    },
-    discordRefreshToken: {
+    discordUserName: {
         type: String,
         default: "",
     },
     gitId: {
-        type: String,
-        default: "",
-    },
-    gitUsername: {
         type: String,
         default: "",
     },
