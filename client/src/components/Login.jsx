@@ -41,7 +41,7 @@ function handleGoogleLink(user, setGoogle, setCurrUser, token) {
             }
             user.getIdToken(true).then(async (tk) => {
                 await axios
-                    .post("http://localhost:5000/signup", {
+                    .post("https://iiitpdiscord.herokuapp.com/signup", {
                         dToken: token,
                         idToken: tk,
                     })
@@ -93,7 +93,7 @@ function Login(props) {
             let tk = null;
             (async () => {
                 await axios
-                    .get("http://localhost:5000/getd", {
+                    .get("https://iiitpdiscord.herokuapp.com/getd", {
                         withCredentials: true,
                         credentials: "include",
                     })
@@ -128,7 +128,7 @@ function Login(props) {
                 <Button
                     disabled={!token ? false : true}
                     className={`step discord ${!!token ? "completed" : ""} `}
-                    href="http://localhost:5000/dauthurl">
+                    href="https://iiitpdiscord.herokuapp.com/dauthurl">
                     <img src={DiscordButton} alt="" />{" "}
                 </Button>
                 <Button
