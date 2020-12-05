@@ -45,7 +45,7 @@ class App extends Component {
                     <Switch>
                         <Route
                             path="/d"
-                            exact={true}
+                            exact
                             component={() => (
                                 <Login d={true} user={this.state.user} />
                             )}

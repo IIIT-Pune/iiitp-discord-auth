@@ -121,7 +121,7 @@ function Login(props) {
     return (
         <div className="Auth page">
             {redirectAuth ? <Redirect to="/authorised" /> : null}
-            {redirect ? <Redirect to="/login/" /> : null}
+            {redirect ? <Redirect to="/" /> : null}
             <span id="prompt">Register with your Institute Mail-ID</span>
             <img src={WhiteHatBlue} className="WhiteHatBlue" alt="" />
             <div className="auth">
