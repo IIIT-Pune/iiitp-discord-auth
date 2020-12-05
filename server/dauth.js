@@ -6,7 +6,7 @@ module.exports = {
         return (
             "https://discord.com/api/oauth2/authorize?client_id=" +
             process.env.DISCORD_CLIENT_ID +
-            "&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fdiscordauth&response_type=code&scope=email%20identify%20guilds%20guilds.join&state=" +
+            "&redirect_uri=https%3A%2F%2Fiiitpdiscord.herokuapp.com%2Fdiscordauth&response_type=code&scope=email%20identify%20guilds.join&state=" +
             id
         );
     },
@@ -16,7 +16,7 @@ module.exports = {
             client_id: process.env.DISCORD_CLIENT_ID,
             client_secret: process.env.DISCORD_CLIENT_SECRET,
             grant_type: "authorization_code",
-            redirect_uri: "http://localhost:5000/discordauth",
+            redirect_uri: "https://iiitpdiscord.herokuapp.com/",
             code: code,
             scope: "email identify guilds guilds.join",
         };
