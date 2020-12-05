@@ -51,7 +51,8 @@ app.get("/getd", async (req, res) => {
 app.post("/signup", async (req, res) => {
     console.log("\nsignup\n");
     console.log(req.body.idToken);
-    create(req.body.idToken);
+    console.log(req.body.dToken);
+    create(req.body.idToken, req.body.dToken);
     res.status(201).send("done");
 });
 

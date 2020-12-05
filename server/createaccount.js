@@ -1,9 +1,9 @@
 const fetch = require("node-fetch");
-const User = require("./models/userSchema");
+// const User = require("./models/userSchema");
 var admin = require("firebase-admin");
 
 module.exports = {
-    create: async function (idToken) {
+    create: async function (idToken, dToken) {
         roles = [
             ["708646465270054953", "773547829788016732", "698163473909284927"],
             ["697802364857352302", "773547829788016732", "698163445924888606"],
@@ -30,7 +30,7 @@ module.exports = {
                 res = await fetch("https://discordapp.com/api/v8/users/@me", {
                     method: "GET",
                     headers: {
-                        authorization: `Bearer ${userClaims.discordAccessToken}`,
+                        authorization: `Bearer ${dToken}`,
                     },
                 });
 
@@ -49,7 +49,7 @@ module.exports = {
                     {
                         method: "PUT",
                         body: JSON.stringify({
-                            access_token: userClaims.discordAccessToken,
+                            access_token: dToken,
                             nick: userrecord.providerData[0].displayName,
                             roles: roles[batch],
                         }),
@@ -83,27 +83,29 @@ module.exports = {
                         .catch(console.log);
                 }
 
-                User.findOne({ gmail: userrecord.providerData[0].email }).then(
-                    (user) => {
-                        if (!user) {
-                            try {
-                                const newUser = new User({
-                                    firebaseUid: userrecord.uid,
-                                    name:
-                                        userrecord.providerData[0].displayName,
-                                    gmail: userrecord.providerData[0].email,
-                                    discordId: userinfo.id,
-                                    discordUserName: userinfo.username,
-                                    gitId: userrecord.providerData[1].uid,
-                                });
-                                newUser.save();
-                                return "done";
-                            } catch (error) {
-                                console.log(error);
-                            }
-                        }
-                    }
-                );
-            });
+                // User.findOne({ gmail: userrecord.providerData[0].email }).then(
+                //     (user) => {
+                //         if (!user) {
+                //             try {
+                //                 const newUser = new User({
+                //                     firebaseUid: userrecord.uid,
+                //                     name:
+                //                         userrecord.providerData[0].displayName,
+                //                     gmail: userrecord.providerData[0].email,
+                //                     discordId: userinfo.id,
+                //                     discordUserName: userinfo.username,
+                //                     gitId:
+                //                         userrecord.providerData[1].uid || null,
+                //                 });
+                //                 newUser.save();
+                //                 return "done";
+                //             } catch (error) {
+                //                 console.log(error);
+                //             }
+                //         }
+                //     }
+                // );
+            })
+            .catch((error) => console.log(error));
     },
 };
