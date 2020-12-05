@@ -45,18 +45,14 @@ function handleGoogleLink(user, setGoogle, setCurrUser, token) {
                         dToken: token,
                         idToken: tk,
                     })
-                    .then((res) => console.log(res))
-                    .catch((err) => console.log(err));
+                    .catch((err) => console.log(err.message));
             });
             setGoogle(true);
             setCurrUser(user);
         })
         .catch(function (error) {
-            var errorCode = error.code;
             var errorMessage = error.message;
-            var email = error.email;
-            var credential = error.credential;
-            console.log(errorCode, errorMessage, email, credential);
+            console.log(errorMessage);
         });
 }
 
@@ -91,7 +87,7 @@ function Login(props) {
                         setToken(idTokenResult.claims.discordAccessToken);
                 })
                 .catch((error) => {
-                    console.log(error);
+                    console.log(error.message);
                 });
         } else if (props.d === true && !redirect) {
             let tk = null;
@@ -111,14 +107,13 @@ function Login(props) {
                                     setRedirect(true);
                                 })
                                 .catch(function (error) {
-                                    console.log(error);
+                                    console.log(error.message);
                                 });
                         } else {
-                            console.log("Redirecting to /login");
                             setRedirect(true);
                         }
                     })
-                    .catch((err) => console.log(err));
+                    .catch((err) => console.log(err.message));
             })();
         }
     }, [currUser, google, props, props.user, redirect]);
