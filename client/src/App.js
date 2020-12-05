@@ -51,11 +51,6 @@ class App extends Component {
                                 <Login d={true} user={this.state.user} />
                             )}
                         />
-                        <Route
-                            path="/login"
-                            exact
-                            component={() => <Login user={this.state.user} />}
-                        />
                         {this.state.user && (
                             <Route
                                 path="/authorised"
@@ -66,6 +61,11 @@ class App extends Component {
                             />
                         )}
                         <Route
+                            path="/"
+                            exact
+                            component={() => <Login user={this.state.user} />}
+                        />
+                        <Route
                             path="/404"
                             exact
                             component={() => (
@@ -73,7 +73,7 @@ class App extends Component {
                                     <h3>404 Page Not Found</h3>
                                     <br />
                                     <br />
-                                    <Link to="login">Login</Link> and join the
+                                    <Link to="/">Login</Link> and join the
                                     discord server
                                 </div>
                             )}
