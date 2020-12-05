@@ -10,7 +10,6 @@ import { BrowserRouter, Switch, Route, Redirect, Link } from "react-router-dom";
 (function () {
     const api_Key = process.env.REACT_APP_APIKEY;
     const auth_Domain = process.env.REACT_APP_AUTHDOMAIN;
-    const database_URL = process.env.REACT_APP_DATABASE_URL;
     const project_Id = process.env.REACT_APP_PROJECT_ID;
     const storage_Bucket = process.env.REACT_APP_STORAGE_BUCKET;
     const messaging_SenderId = process.env.REACT_APP_MESSAGESENDERID;
@@ -19,7 +18,6 @@ import { BrowserRouter, Switch, Route, Redirect, Link } from "react-router-dom";
     const firebaseConfig = {
         apiKey: api_Key,
         authDomain: auth_Domain,
-        databaseURL: database_URL,
         projectId: project_Id,
         storageBucket: storage_Bucket,
         messagingSenderId: messaging_SenderId,
