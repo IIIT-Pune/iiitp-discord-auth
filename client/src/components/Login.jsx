@@ -122,6 +122,10 @@ function Login(props) {
         <div className="Auth page">
             {redirectAuth ? <Redirect to="/authorised" /> : null}
             {redirect ? <Redirect to="/" /> : null}
+            <h3>IIIT-P Discord Registration</h3>
+            <br />
+            <br />
+            <br />
             <span id="prompt">Register with your Institute Mail-ID</span>
             <img src={WhiteHatBlue} className="WhiteHatBlue" alt="" />
             <div className="auth">
