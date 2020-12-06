@@ -4,7 +4,7 @@ import DiscordButton from "../assets/img/Discord-Button.svg";
 import WhiteHatBlue from "../assets/img/whitehat-blue.svg";
 import firebase from "firebase/app";
 import { Button } from "react-bootstrap";
-import { Redirect } from "react-router-dom";
+import { Redirect, useParams } from "react-router-dom";
 import axios from "axios";
 
 function handleGoogleLink(user, setGoogle, setCurrUser, token) {
@@ -62,7 +62,7 @@ function Login(props) {
     const [google, setGoogle] = useState(false);
     const [redirect, setRedirect] = useState(false);
     const [redirectAuth, setRedirectAuth] = useState(false);
-
+    let { code } = useParams();
     useEffect(() => {
         setCurrUser(props.user);
     }, [props.user]);
@@ -93,7 +93,7 @@ function Login(props) {
             let tk = null;
             (async () => {
                 await axios
-                    .get("https://iiitpdiscord.herokuapp.com/getd", {
+                    .get(`https://iiitpdiscord.herokuapp.com/getd/${code}`, {
                         withCredentials: true,
                         credentials: "include",
                     })

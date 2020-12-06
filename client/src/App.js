@@ -44,7 +44,7 @@ class App extends Component {
                 <BrowserRouter>
                     <Switch>
                         <Route
-                            path="/d"
+                            path="/d/:code"
                             exact
                             component={() => (
                                 <Login d={true} user={this.state.user} />
