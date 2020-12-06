@@ -116,7 +116,7 @@ function Login(props) {
                     .catch((err) => console.log(err.message));
             })();
         }
-    }, [currUser, google, props, props.user, redirect]);
+    }, [code, currUser, google, props, props.user, redirect]);
 
     return (
         <div className="Auth page">
