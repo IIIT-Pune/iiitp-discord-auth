@@ -16,7 +16,7 @@ function Authorised(props) {
 				<a href='https://discord.com/channels/694190268424912936/694191262424760390'>
 					discord app/website
 				</a>{" "}
-				and have a blast at the IIIT Pune server! Redirect to Discord
+				and have a blast at the IIIT Pune server! 
 				<br />
 				You may close the tab now.
 			</span>
