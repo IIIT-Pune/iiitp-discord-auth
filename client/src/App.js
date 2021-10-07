@@ -1,17 +1,15 @@
 import React, { Component } from "react";
-import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
-import "./assets/scss/main.scss";
-import Login from "./components/Login";
-import "./assets/scss/main.scss";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "dotenv/config";
-import { Button } from "react-bootstrap";
+import "./assets/scss/main.scss";
+import Login from "./components/Login";
+import Authorised from "./components/Authorised";
+import { BrowserRouter, Switch, Route, Redirect, Link } from "react-router-dom";
 
 (function () {
     const api_Key = process.env.REACT_APP_APIKEY;
     const auth_Domain = process.env.REACT_APP_AUTHDOMAIN;
-    const database_URL = process.env.REACT_APP_DATABASE_URL;
     const project_Id = process.env.REACT_APP_PROJECT_ID;
     const storage_Bucket = process.env.REACT_APP_STORAGE_BUCKET;
     const messaging_SenderId = process.env.REACT_APP_MESSAGESENDERID;
@@ -20,7 +18,6 @@ import { Button } from "react-bootstrap";
     const firebaseConfig = {
         apiKey: api_Key,
         authDomain: auth_Domain,
-        databaseURL: database_URL,
         projectId: project_Id,
         storageBucket: storage_Bucket,
         messagingSenderId: messaging_SenderId,
@@ -34,53 +31,55 @@ import { Button } from "react-bootstrap";
 class App extends Component {
     constructor(props) {
         super(props);
-        this.state = { userData: null };
+        this.state = { user: null };
     }
     componentDidMount() {
-        this.setState({ userData: firebase.auth().currentUser });
+        firebase.auth().onAuthStateChanged((user) => {
+            user && this.setState({ user: user });
+        });
     }
     render() {
         return (
             <>
                 <BrowserRouter>
-                    {/* {Navigation} */}
                     <Switch>
                         <Route
-                            path="/leaderboard"
-                            render={() => <>Leaderboard</>}
-                        />
-                        <Route
-                            path="/profile"
+                            path="/d/:code"
                             exact
-                            render={() => <>profile. </>}
+                            component={() => (
+                                <Login d={true} user={this.state.user} />
+                            )}
                         />
+                        {this.state.user && (
+                            <Route
+                                path="/authorised"
+                                exact
+                                component={() => (
+                                    <Authorised user={this.state.user} />
+                                )}
+                            />
+                        )}
                         <Route
-                            path="/login/d/"
-                            component={() => <Login d={true} />}
-                        />
-                        <Route
-                            path="/login"
+                            path="/"
                             exact
-                            component={() => <Login />}
+                            component={() => <Login user={this.state.user} />}
                         />
-                        <Route path="/" exact component={() => <>Home</>} />
-                        {/* Redirect to root if location is not found */}
                         <Route
                             path="/404"
                             exact
-                            component={() => <>404 Page Not Found</>}
+                            component={() => (
+                                <div className="page authorised">
+                                    <h3>404 Page Not Found</h3>
+                                    <br />
+                                    <br />
+                                    <Link to="/">Login</Link> and join the
+                                    discord server
+                                </div>
+                            )}
                         />
                         <Redirect to="/404" />
                     </Switch>
                 </BrowserRouter>
-                <Button className="m-2" href="/login">
-                    Login
-                </Button>
-                <Button
-                    className="m-2"
-                    onClick={() => firebase.auth().signOut()}>
-                    Sign Out
-                </Button>
             </>
         );
     }

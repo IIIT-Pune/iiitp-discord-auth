@@ -1,5 +1,4 @@
 const fetch = require("node-fetch");
-// const User = require("./models/userSchema");
 var admin = require("firebase-admin");
 
 module.exports = {
@@ -82,29 +81,6 @@ module.exports = {
                         .then(console.log)
                         .catch(console.log);
                 }
-
-                // User.findOne({ gmail: userrecord.providerData[0].email }).then(
-                //     (user) => {
-                //         if (!user) {
-                //             try {
-                //                 const newUser = new User({
-                //                     firebaseUid: userrecord.uid,
-                //                     name:
-                //                         userrecord.providerData[0].displayName,
-                //                     gmail: userrecord.providerData[0].email,
-                //                     discordId: userinfo.id,
-                //                     discordUserName: userinfo.username,
-                //                     gitId:
-                //                         userrecord.providerData[1].uid || null,
-                //                 });
-                //                 newUser.save();
-                //                 return "done";
-                //             } catch (error) {
-                //                 console.log(error);
-                //             }
-                //         }
-                //     }
-                // );
             })
             .catch((error) => console.log(error));
     },

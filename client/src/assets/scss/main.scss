@@ -11,72 +11,15 @@ body {
 .root {
     display: flex;
 }
-.Navbar {
-    background-color: #5771e2;
-    width: 23ch;
-    height: 100vh;
-    position: fixed;
-    z-index: 9999;
-    overflow: auto;
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: column;
-    .logo {
-        padding: 1.2rem 1rem;
-        max-width: 100%;
-        background-color: #34499e;
-        border-radius: 0 0 1rem 1rem;
-    }
-    ul {
-        padding: 1rem 0;
-        margin: 0;
-        height: 100%;
-        list-style: none;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        li {
-            font-size: 1.2rem;
-            font-weight: 400;
-            a {
-                text-decoration: none;
-                color: rgba(255, 255, 255, 0.75);
-                display: inline-block;
-                width: 100%;
-                height: 100%;
-                padding: 1rem;
-                span {
-                    width: 100%;
-                    height: 100%;
-                }
-                img {
-                    margin-right: 2ch;
-                    height: 2rem;
-                    max-width: 100%;
-                }
-            }
-
-            &:hover a,
-            .active {
-                background-color: rgba(255, 255, 255, 0.2);
-                color: rgba(255, 255, 255, 1);
-            }
-            .active {
-                background-color: rgba(255, 255, 255, 0.3) !important;
-            }
-            &.help {
-                margin-top: auto;
-            }
-        }
-    }
-}
 .page {
     min-height: 100vh;
-    margin-left: 23ch;
-    padding: 5rem 3rem 4rem 3rem;
+    padding: 3rem 1rem;
     background-color: #f9f9f9;
     position: relative;
     color: #232367;
+}
+.authorised {
+    text-align: center;
 }
 .Auth {
     background-image: url("../img/homeillustration.svg");
@@ -96,7 +39,7 @@ body {
         position: absolute;
         top: 5%;
         right: 5%;
-        max-height: 10rem;
+        height: 10vh;
     }
     .auth {
         margin: auto;
@@ -114,7 +57,9 @@ body {
             box-shadow: 0 3px 20px rgba(0, 0, 0, 0.11);
             background: none;
             img {
-                width: 30ch;
+                // min-width: 30ch;
+                width: 100%;
+                max-width: 23ch;
             }
 
             &::before {
@@ -127,12 +72,13 @@ body {
                 top: 50%;
                 transform: translateY(-50%);
                 left: -5rem;
+                z-index: 3;
             }
-            &:nth-child(1),
-            &:nth-child(2) {
+            &:nth-child(1) {
                 &::after {
                     content: " ";
-                    height: 2.75rem;
+                    z-index: 1;
+                    height: 2.35rem;
                     border: 1px #0b288b solid;
                     position: absolute;
                     top: 100%;
@@ -162,152 +108,6 @@ body {
             }
             &.completed::after {
                 border: 1px solid rgb(105, 219, 105);
-            }
-        }
-    }
-}
-.Leaderboard {
-    text-align: center;
-    #categoryMeta {
-        text-align: left;
-        width: 90%;
-        margin: auto;
-        display: grid;
-        grid-template-columns: 17rem 1fr;
-        #categoryImg {
-            grid-row: 1 / span 3;
-            height: 13rem;
-            width: 13rem;
-            position: relative;
-            #bubble {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                height: 100%;
-            }
-            #display {
-                position: absolute;
-                background: white;
-                box-shadow: 0 0 16px #00000010;
-                border-radius: 50%;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                height: 8rem;
-                width: 8rem;
-            }
-        }
-        #name {
-            grid-column: 2;
-            font-size: 1.75rem;
-        }
-        #asked #answered {
-            grid-column: 2;
-        }
-        #asked {
-            margin-top: 3rem;
-        }
-    }
-    table {
-        width: 80%;
-        margin: auto;
-        margin-top: 2rem;
-        font-weight: 300;
-        border-collapse: collapse;
-        border-radius: 0.5rem;
-        overflow: hidden;
-        box-shadow: 0 0 16px #0000001a;
-        th,
-        td {
-            padding: 1rem;
-        }
-        th {
-            color: white;
-            font-weight: 400;
-            background-color: #5771e2;
-        }
-        tbody {
-            tr {
-                background-color: white;
-            }
-            tr:hover {
-                background-color: #f3f3f3;
-            }
-        }
-    }
-}
-.Profile {
-    display: flex;
-    flex-direction: column;
-    .profile-img {
-        height: 15rem;
-        position: relative;
-        #bubble {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            height: 14rem;
-        }
-        #user {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border-radius: 100%;
-            border: 0.25rem #e2e2e2 solid;
-            height: 8.75rem;
-            width: 8.75rem;
-            box-shadow: 0 0 16px #00000010;
-        }
-    }
-    .con {
-        max-width: 70%;
-        margin: auto;
-        text-align: center;
-        .meta {
-            #name {
-                font-size: 1.5rem;
-            }
-            div {
-                display: flex;
-                justify-content: center;
-            }
-        }
-        table {
-            margin: 0;
-            width: 100%;
-            text-align: left;
-            td {
-                padding: 0.5rem 1rem;
-                padding-left: 0;
-            }
-            td:nth-child(2) {
-                text-align: right;
-                padding-left: 1rem;
-                padding-right: 0;
-            }
-        }
-        .accounts {
-            #one {
-                font-size: 1.25rem;
-                margin-bottom: 2.5rem;
-                display: block;
-            }
-
-            .account {
-                text-align: left;
-                width: 100%;
-                display: flex;
-                margin: 1rem 0;
-                .logo {
-                    height: 2rem;
-                    margin-right: 1.75rem;
-                }
-                span {
-                    padding: 5px 0;
-                }
             }
         }
     }
