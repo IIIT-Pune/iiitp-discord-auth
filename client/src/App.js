@@ -4,13 +4,8 @@ import Login from "./components/Login";
 import Authorised from "./components/Authorised";
 import { BrowserRouter, Switch, Route, Redirect, Link } from "react-router-dom";
 
-(function () {
-    const api_Key = process.env.REACT_APP_APIKEY;
-    const auth_Domain = process.env.REACT_APP_AUTHDOMAIN;
-    const project_Id = process.env.REACT_APP_PROJECT_ID;
-    const storage_Bucket = process.env.REACT_APP_STORAGE_BUCKET;
-    const messaging_SenderId = process.env.REACT_APP_MESSAGESENDERID;
-    const app_Id = process.env.REACT_APP_APPID;
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import "./firebase";
 
 const auth = getAuth();
 

@@ -1,44 +1,33 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import GoogleButton from "../assets/img/Google-Button.svg";
 import DiscordButton from "../assets/img/Discord-Button.svg";
 import WhiteHatBlue from "../assets/img/whitehat-blue.svg";
-import firebase from "firebase/app";
+
+import {
+    signOut,
+    getAuth,
+    signInWithCustomToken,
+    GoogleAuthProvider,
+} from "firebase";
+
 import { Button } from "react-bootstrap";
 import { Redirect, useParams } from "react-router-dom";
 import axios from "axios";
 
-function handleGoogleLink(user, setGoogle, setCurrUser, token) {
+const auth = getAuth();
+var provider = new GoogleAuthProvider();
+provider.addScope("https://www.googleapis.com/auth/userinfo.profile");
+
+const handleGoogleLink = (user, setGoogle, setCurrUser, token) => {
     console.log("Google Link");
+
     if (!token) {
-        firebase.auth().signOut();
+        signOut(auth);
         window.alert("Session Expired");
     }
-    var provider = new firebase.auth.GoogleAuthProvider();
-    provider.addScope("https://www.googleapis.com/auth/userinfo.profile");
+
     user.linkWithPopup(provider)
         .then((result) => {
-            var user = result.user;
-            let x = user.email.split("@")[0];
-            let y = user.email.split("@")[1];
-            if (
-                isNaN(x.slice(-2)) ||
-                !["cse.iiitp.ac.in", "ece.iiitp.ac.in"].includes(y)
-            ) {
-                firebase
-                    .auth()
-                    .currentUser.unlink("google.com")
-                    .then(function () {
-                        // Auth provider unlinked from account
-                        console.log("User unlinked from google");
-                    })
-                    .catch(function (error) {
-                        console.lof(error);
-                    });
-                window.alert(
-                    "The Email ID is not a valid IIIT Pune student email id. Try again with the right ID"
-                );
-                return;
-            }
             user.getIdToken(true).then(async (tk) => {
                 await axios
                     .post("https://iiitpdiscord.herokuapp.com/signup", {
@@ -54,9 +43,9 @@ function handleGoogleLink(user, setGoogle, setCurrUser, token) {
             var errorMessage = error.message;
             console.log(errorMessage);
         });
-}
+};
 
-function Login(props) {
+const Login = (props) => {
     const [currUser, setCurrUser] = useState(null);
     const [token, setToken] = useState(null);
     const [google, setGoogle] = useState(false);
@@ -100,9 +89,7 @@ function Login(props) {
                     .then((res) => {
                         tk = res.data.tk;
                         if (!!tk) {
-                            firebase
-                                .auth()
-                                .signInWithCustomToken(tk)
+                            signInWithCustomToken(tk)
                                 .then(() => {
                                     setRedirect(true);
                                 })
@@ -119,21 +106,21 @@ function Login(props) {
     }, [code, currUser, google, props, props.user, redirect]);
 
     return (
-        <div className="Auth page">
-            {redirectAuth ? <Redirect to="/authorised" /> : null}
-            {redirect ? <Redirect to="/" /> : null}
+        <div className='Auth page'>
+            {redirectAuth ? <Redirect to='/authorised' /> : null}
+            {redirect ? <Redirect to='/' /> : null}
             <h3>IIIT-P Discord Registration</h3>
             <br />
             <br />
             <br />
-            <span id="prompt">Register with your Institute Mail-ID</span>
-            <img src={WhiteHatBlue} className="WhiteHatBlue" alt="" />
-            <div className="auth">
+            <span id='prompt'>Register with your Institute Mail-ID</span>
+            <img src={WhiteHatBlue} className='WhiteHatBlue' alt='' />
+            <div className='auth'>
                 <Button
                     disabled={!token ? false : true}
                     className={`step discord ${!!token ? "completed" : ""} `}
-                    href="https://iiitpdiscord.herokuapp.com/dauthurl">
-                    <img src={DiscordButton} alt="" />{" "}
+                    href='https://iiitpdiscord.herokuapp.com/dauthurl'>
+                    <img src={DiscordButton} alt='' />{" "}
                 </Button>
                 <Button
                     disabled={!!token && !google ? false : true}
@@ -146,12 +133,12 @@ function Login(props) {
                         )
                     }
                     className={`step google ${google ? "completed" : ""}`}>
-                    <img src={GoogleButton} alt="" />{" "}
+                    <img src={GoogleButton} alt='' />{" "}
                 </Button>
                 {redirectAuth && `Redirecting...`}
             </div>
         </div>
     );
-}
+};
 
 export default Login;
