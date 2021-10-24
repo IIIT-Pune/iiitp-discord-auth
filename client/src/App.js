@@ -1,7 +1,4 @@
-import React, { Component } from "react";
-import firebase from "firebase/app";
-import "firebase/auth";
-import "dotenv/config";
+import React from "react";
 import "./assets/scss/main.scss";
 import Login from "./components/Login";
 import Authorised from "./components/Authorised";
@@ -15,74 +12,58 @@ import { BrowserRouter, Switch, Route, Redirect, Link } from "react-router-dom";
     const messaging_SenderId = process.env.REACT_APP_MESSAGESENDERID;
     const app_Id = process.env.REACT_APP_APPID;
 
-    const firebaseConfig = {
-        apiKey: api_Key,
-        authDomain: auth_Domain,
-        projectId: project_Id,
-        storageBucket: storage_Bucket,
-        messagingSenderId: messaging_SenderId,
-        appId: app_Id,
-    };
-    !firebase.apps.length
-        ? firebase.initializeApp(firebaseConfig)
-        : firebase.app();
-})();
+const auth = getAuth();
 
-class App extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { user: null };
-    }
-    componentDidMount() {
-        firebase.auth().onAuthStateChanged((user) => {
-            user && this.setState({ user: user });
+const App = () => {
+    const [curUser, setCurUser] = useState(auth.currentUser);
+    useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            setCurUser(auth.currentUser);
+
+            if (user) console.log("User Signed In");
+            else console.log("User Signed out");
         });
-    }
-    render() {
-        return (
-            <>
-                <BrowserRouter>
-                    <Switch>
+    }, []);
+
+    return (
+        <>
+            <BrowserRouter>
+                <Switch>
+                    <Route
+                        path='/d/:code'
+                        exact
+                        component={() => <Login d={true} user={curUser} />}
+                    />
+                    {curUser && (
                         <Route
-                            path="/d/:code"
+                            path='/authorised'
                             exact
-                            component={() => (
-                                <Login d={true} user={this.state.user} />
-                            )}
+                            component={() => <Authorised user={curUser} />}
                         />
-                        {this.state.user && (
-                            <Route
-                                path="/authorised"
-                                exact
-                                component={() => (
-                                    <Authorised user={this.state.user} />
-                                )}
-                            />
+                    )}
+                    <Route
+                        path='/'
+                        exact
+                        component={() => <Login user={curUser} />}
+                    />
+                    <Route
+                        path='/404'
+                        exact
+                        component={() => (
+                            <div className='page authorised'>
+                                <h3>404 Page Not Found</h3>
+                                <br />
+                                <br />
+                                <Link to='/'>Login</Link> and join the discord
+                                server
+                            </div>
                         )}
-                        <Route
-                            path="/"
-                            exact
-                            component={() => <Login user={this.state.user} />}
-                        />
-                        <Route
-                            path="/404"
-                            exact
-                            component={() => (
-                                <div className="page authorised">
-                                    <h3>404 Page Not Found</h3>
-                                    <br />
-                                    <br />
-                                    <Link to="/">Login</Link> and join the
-                                    discord server
-                                </div>
-                            )}
-                        />
-                        <Redirect to="/404" />
-                    </Switch>
-                </BrowserRouter>
-            </>
-        );
-    }
-}
+                    />
+                    <Redirect to='/404' />
+                </Switch>
+            </BrowserRouter>
+        </>
+    );
+};
 
 export default App;
