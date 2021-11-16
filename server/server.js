@@ -46,13 +46,9 @@ app.get("/dauthurl", (req, res) => {
 });
 
 app.get("/discordauth", async (req, res) => {
-    if (req.query.state == req.sessionID) {
-        const resObject = await d.discordAuth(req.query.code);
-        req.session.jwt = await resObject.jwt;
-        res.redirect(`http://localhost:3000/login/d`);
-    } else {
-        res.status(500);
-    }
+    const resObject = await d.discordAuth(req.query.code);
+    req.session.jwt = await resObject.jwt;
+    res.redirect(`http://localhost:3000/d`);
 });
 
 app.get("/getd", async (req, res) => {

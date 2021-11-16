@@ -92,7 +92,7 @@ const Login = (props) => {
                     .then((res) => {
                         tk = res.data.tk;
                         if (!!tk) {
-                            signInWithCustomToken(tk)
+                            signInWithCustomToken(auth, tk)
                                 .then(() => {
                                     setRedirect(true);
                                 })
