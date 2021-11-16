@@ -26,9 +26,10 @@ const d = require("./dauth");
 
 const app = express();
 
-app.use(
-    cors({ credentials: true, origin: "https://iiitp-discord.netlify.app" })
-);
+// app.use(
+//     cors({ credentials: true, origin: "https://iiitp-discord.netlify.app" })
+// );
+app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(
@@ -41,13 +42,17 @@ app.use(
 );
 
 app.get("/dauthurl", (req, res) => {
-    res.redirect(d.discordAuthUrl("harsh"));
+    res.redirect(d.discordAuthUrl(req.sessionID));
 });
 
 app.get("/discordauth", async (req, res) => {
-    const resObject = await d.discordAuth(req.query.state, req.query.code);
-    req.session.jwt = await resObject.jwt;
-    res.redirect(`https://iiitp-discord.netlify.app/login/d`);
+    if (req.query.state == req.sessionID) {
+        const resObject = await d.discordAuth(req.query.code);
+        req.session.jwt = await resObject.jwt;
+        res.redirect(`http://localhost:3000/login/d`);
+    } else {
+        res.status(500);
+    }
 });
 
 app.get("/getd", async (req, res) => {
