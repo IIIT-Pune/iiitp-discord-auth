@@ -2,12 +2,12 @@
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
-    api_Key: process.env.REACT_APP_APIKEY,
-    auth_Domain: process.env.REACT_APP_AUTHDOMAIN,
-    project_Id: process.env.REACT_APP_PROJECT_ID,
-    storage_Bucket: process.env.REACT_APP_STORAGE_BUCKET,
-    messaging_SenderId: process.env.REACT_APP_MESSAGESENDERID,
-    app_Id: process.env.REACT_APP_APPID,
+    apiKey: "AIzaSyDePw345wFTSxWLyl3WLfUCjJ93uo5_Ydg",
+    authDomain: "iiitp-discord.firebaseapp.com",
+    projectId: "iiitp-discord",
+    storageBucket: "iiitp-discord.appspot.com",
+    messagingSenderId: "770992285076",
+    appId: "1:770992285076:web:f10d7ac3ff927cefd05b81",
 };
 
 // Initialize Firebase

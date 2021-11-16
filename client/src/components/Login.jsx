@@ -8,14 +8,15 @@ import {
     getAuth,
     signInWithCustomToken,
     GoogleAuthProvider,
-} from "firebase";
+    linkWithPopup,
+} from "firebase/auth";
 
 import { Button } from "react-bootstrap";
 import { Redirect, useParams } from "react-router-dom";
 import axios from "axios";
 
 const auth = getAuth();
-var provider = new GoogleAuthProvider();
+const provider = new GoogleAuthProvider();
 provider.addScope("https://www.googleapis.com/auth/userinfo.profile");
 
 const handleGoogleLink = (user, setGoogle, setCurrUser, token) => {
@@ -26,11 +27,11 @@ const handleGoogleLink = (user, setGoogle, setCurrUser, token) => {
         window.alert("Session Expired");
     }
 
-    user.linkWithPopup(provider)
+    linkWithPopup(auth.currentUser, provider)
         .then((result) => {
             user.getIdToken(true).then(async (tk) => {
                 await axios
-                    .post("https://iiitpdiscord.herokuapp.com/signup", {
+                    .post("http://localhost:5000/signup", {
                         dToken: token,
                         idToken: tk,
                     })
@@ -47,14 +48,16 @@ const handleGoogleLink = (user, setGoogle, setCurrUser, token) => {
 
 const Login = (props) => {
     const [currUser, setCurrUser] = useState(null);
-    const [token, setToken] = useState(null);
+    const [token, setToken] = useState(null); // Discords User Access Token
     const [google, setGoogle] = useState(false);
     const [redirect, setRedirect] = useState(false);
     const [redirectAuth, setRedirectAuth] = useState(false);
     let { code } = useParams();
+
     useEffect(() => {
         setCurrUser(props.user);
     }, [props.user]);
+
     useEffect(() => {
         if (!!currUser) {
             const providerData = currUser.providerData;
@@ -82,7 +85,7 @@ const Login = (props) => {
             let tk = null;
             (async () => {
                 await axios
-                    .get(`https://iiitpdiscord.herokuapp.com/getd/${code}`, {
+                    .get(`http://localhost:5000/getd/`, {
                         withCredentials: true,
                         credentials: "include",
                     })
@@ -119,7 +122,7 @@ const Login = (props) => {
                 <Button
                     disabled={!token ? false : true}
                     className={`step discord ${!!token ? "completed" : ""} `}
-                    href='https://iiitpdiscord.herokuapp.com/dauthurl'>
+                    href='http://localhost:5000/dauthurl'>
                     <img src={DiscordButton} alt='' />{" "}
                 </Button>
                 <Button

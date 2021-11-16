@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./assets/scss/main.scss";
+import "./firebase";
+
 import Login from "./components/Login";
 import Authorised from "./components/Authorised";
 import { BrowserRouter, Switch, Route, Redirect, Link } from "react-router-dom";
 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import "./firebase";
 
 const auth = getAuth();
 
@@ -25,7 +26,7 @@ const App = () => {
             <BrowserRouter>
                 <Switch>
                     <Route
-                        path='/d/:code'
+                        path='/d'
                         exact
                         component={() => <Login d={true} user={curUser} />}
                     />
