@@ -1,47 +1,27 @@
-import React, { useEffect, useState } from "react";
 import "./assets/scss/main.scss";
-import "./firebase";
 
 import Login from "./components/Login";
 import Authorised from "./components/Authorised";
 import { BrowserRouter, Switch, Route, Redirect, Link } from "react-router-dom";
-
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-
-const auth = getAuth();
-
+import { FirebaseAuthProvider } from "./firebaseContext";
 const App = () => {
-    const [curUser, setCurUser] = useState(auth.currentUser);
-    useEffect(() => {
-        onAuthStateChanged(auth, (user) => {
-            setCurUser(auth.currentUser);
-
-            if (user) console.log("User Signed In");
-            else console.log("User Signed out");
-        });
-    }, []);
-
     return (
-        <>
+        <FirebaseAuthProvider>
             <BrowserRouter>
                 <Switch>
                     <Route
                         path='/d'
                         exact
-                        component={() => <Login d={true} user={curUser} />}
+                        component={() => <Login d={true} />}
                     />
-                    {curUser && (
+                    {
                         <Route
                             path='/authorised'
                             exact
-                            component={() => <Authorised user={curUser} />}
+                            component={() => <Authorised />}
                         />
-                    )}
-                    <Route
-                        path='/'
-                        exact
-                        component={() => <Login user={curUser} />}
-                    />
+                    }
+                    <Route path='/' exact component={() => <Login />} />
                     <Route
                         path='/404'
                         exact
@@ -58,7 +38,7 @@ const App = () => {
                     <Redirect to='/404' />
                 </Switch>
             </BrowserRouter>
-        </>
+        </FirebaseAuthProvider>
     );
 };
 

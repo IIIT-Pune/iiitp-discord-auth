@@ -12,7 +12,7 @@ function Authorised(props) {
             <br />
             <br />
             <span>
-                <strong>{auth.currentUser.displayName}</strong> Open the{" "}
+                <strong>{auth.currentUser?.displayName}</strong> Open the{" "}
                 <a href='https://discord.com/channels/694190268424912936/694191262424760390'>
                     discord app/website
                 </a>{" "}

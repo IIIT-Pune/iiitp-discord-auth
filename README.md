@@ -28,7 +28,7 @@
 
     2. Save the keys (Public and Client Secret) to the `.env` file.
 
-    3. Change the redirect URI to the local port URI where your client app will be running. Example `http://localhost:5000`.
+    3. Change the redirect URI to the local port URI where your client app will be running. Example `https://iiitpauth.herokuapp.com`.
 
     4. Save the redirect URI to the `.env` file.
 

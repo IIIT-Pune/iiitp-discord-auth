@@ -1,144 +1,83 @@
-import { useState, useEffect } from "react";
+import { useContext } from "react";
 import GoogleButton from "../assets/img/Google-Button.svg";
 import DiscordButton from "../assets/img/Discord-Button.svg";
 import WhiteHatBlue from "../assets/img/whitehat-blue.svg";
-
-import {
-    signOut,
-    getAuth,
-    signInWithCustomToken,
-    GoogleAuthProvider,
-    linkWithPopup,
-} from "firebase/auth";
+import GitButton from "../assets/img/Git-Button.svg";
 
 import { Button } from "react-bootstrap";
-import { Redirect, useParams } from "react-router-dom";
-import axios from "axios";
+import { FirebaseAuthContext } from "../firebaseContext";
+import OauthPopup from "react-oauth-popup";
 
-const auth = getAuth();
-const provider = new GoogleAuthProvider();
-provider.addScope("https://www.googleapis.com/auth/userinfo.profile");
+const Login = () => {
+    const {
+        curUser: user,
+        signInWithGoogle,
+        linkGithub,
+        onCode,
+        onClose,
+    } = useContext(FirebaseAuthContext);
 
-const handleGoogleLink = (user, setGoogle, setCurrUser, token) => {
-    console.log("Google Link");
-
-    if (!token) {
-        signOut(auth);
-        window.alert("Session Expired");
-    }
-
-    linkWithPopup(auth.currentUser, provider)
-        .then((result) => {
-            user.getIdToken(true).then(async (tk) => {
-                await axios
-                    .post("http://localhost:5000/signup", {
-                        dToken: token,
-                        idToken: tk,
-                    })
-                    .catch((err) => console.log(err.message));
-            });
-            setGoogle(true);
-            setCurrUser(user);
-        })
-        .catch(function (error) {
-            var errorMessage = error.message;
-            console.log(errorMessage);
-        });
-};
-
-const Login = (props) => {
-    const [currUser, setCurrUser] = useState(null);
-    const [token, setToken] = useState(null); // Discords User Access Token
-    const [google, setGoogle] = useState(false);
-    const [redirect, setRedirect] = useState(false);
-    const [redirectAuth, setRedirectAuth] = useState(false);
-    let { code } = useParams();
-
-    useEffect(() => {
-        setCurrUser(props.user);
-    }, [props.user]);
-
-    useEffect(() => {
-        if (!!currUser) {
-            const providerData = currUser.providerData;
-            if (
-                providerData.find(
-                    ({ providerId }) => providerId === "google.com"
-                )
-            ) {
-                setGoogle(true);
-                setTimeout(setRedirectAuth(true), 2000);
-            }
-            currUser
-                .getIdTokenResult()
-                .then((idTokenResult) => {
-                    if (
-                        idTokenResult.claims.provider === "discord.com" &&
-                        !google
-                    )
-                        setToken(idTokenResult.claims.discordAccessToken);
-                })
-                .catch((error) => {
-                    console.log(error.message);
-                });
-        } else if (props.d === true && !redirect) {
-            let tk = null;
-            (async () => {
-                await axios
-                    .get(`http://localhost:5000/getd/`, {
-                        withCredentials: true,
-                        credentials: "include",
-                    })
-                    .then((res) => {
-                        tk = res.data.tk;
-                        if (!!tk) {
-                            signInWithCustomToken(auth, tk)
-                                .then(() => {
-                                    setRedirect(true);
-                                })
-                                .catch(function (error) {
-                                    console.log(error.message);
-                                });
-                        } else {
-                            setRedirect(true);
-                        }
-                    })
-                    .catch((err) => console.log(err.message));
-            })();
-        }
-    }, [code, currUser, google, props, props.user, redirect]);
+    console.log(user);
 
     return (
         <div className='Auth page'>
-            {redirectAuth ? <Redirect to='/authorised' /> : null}
-            {redirect ? <Redirect to='/' /> : null}
-            <h3>IIIT-P Discord Registration</h3>
+            <h3>IIIT-P Student Authentication</h3>
             <br />
             <br />
             <br />
-            <span id='prompt'>Register with your Institute Mail-ID</span>
+            {!!user && (
+                <div className='user'>
+                    <img
+                        src={
+                            user?.providerData?.[1]?.photoURL ||
+                            user?.providerData?.[0]?.photoURL
+                        }
+                        alt=''
+                    />
+                    <span id='prompt'>Hello {user?.displayName}</span>
+                </div>
+            )}
+            <br />
+            {user?.providerData?.[0] ? (
+                <span id='prompt'>Sign In with Google</span>
+            ) : !user?.providerData?.[1] ? (
+                <span id='prompt'>Link with Github</span>
+            ) : (
+                <span id='prompt'>Sign In with Discord</span>
+            )}
+
             <img src={WhiteHatBlue} className='WhiteHatBlue' alt='' />
             <div className='auth'>
                 <Button
-                    disabled={!token ? false : true}
-                    className={`step discord ${!!token ? "completed" : ""} `}
-                    href='http://localhost:5000/dauthurl'>
-                    <img src={DiscordButton} alt='' />{" "}
-                </Button>
-                <Button
-                    disabled={!!token && !google ? false : true}
-                    onClick={() =>
-                        handleGoogleLink(
-                            currUser,
-                            setGoogle,
-                            setCurrUser,
-                            token
-                        )
-                    }
-                    className={`step google ${google ? "completed" : ""}`}>
+                    disabled={!!user}
+                    onClick={signInWithGoogle}
+                    className={`step google ${!!user ? "completed" : ""}`}>
                     <img src={GoogleButton} alt='' />{" "}
                 </Button>
-                {redirectAuth && `Redirecting...`}
+                <Button
+                    disabled={!!user?.providerData?.[1]}
+                    onClick={linkGithub}
+                    className={`step git ${
+                        !!user?.providerData?.[1] ? "completed" : ""
+                    }`}>
+                    <img src={GitButton} alt='' />{" "}
+                </Button>
+                <OauthPopup
+                    url={
+                        "https://discord.com/api/oauth2/authorize?client_id=" +
+                        "909745349307019284" +
+                        "&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2F&response_type=code&scope=email%20identify%20guilds.join&state=" +
+                        user?.uid
+                    }
+                    onCode={onCode}
+                    onClose={onClose}>
+                    <Button
+                        className={`step discord ${
+                            !!user?.providerData?.[2] ? "completed" : ""
+                        } `}>
+                        <img src={DiscordButton} alt='' />{" "}
+                    </Button>
+                </OauthPopup>
             </div>
         </div>
     );
