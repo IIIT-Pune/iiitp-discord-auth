@@ -66,7 +66,7 @@ const Login = () => {
                     url={
                         "https://discord.com/api/oauth2/authorize?client_id=" +
                         "909745349307019284" +
-                        "&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2F&response_type=code&scope=email%20identify%20guilds.join&state=" +
+                        "&redirect_uri=https%3A%2F%2Fiiitpauth.netlify.app%2F&response_type=code&scope=email%20identify%20guilds.join&state=" +
                         user?.uid
                     }
                     onCode={onCode}
