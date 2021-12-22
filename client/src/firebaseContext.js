@@ -79,7 +79,16 @@ const FirebaseAuthProvider = ({ children }) => {
                         console.log(error);
                     });
             })
-            .catch((err) => {
+            .catch(async (err) => {
+                curUser
+                    .getIdTokenResult()
+                    .then((idTokenResult) => {
+                        // Confirm the user is an Admin.
+                        console.log(idTokenResult.claims);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
                 console.log("err", err);
             });
     };
