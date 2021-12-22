@@ -21,7 +21,9 @@ const FirebaseAuthContext = React.createContext({
 
 const FirebaseAuthProvider = ({ children }) => {
     const [curUser, setCurUser] = useState(null);
+    const [providers, setProviders] = useState([]);
     const [auth, setAuth] = useState();
+    const [isDiscordLinked, setIsDiscordLinked] = useState(false);
     useEffect(() => {
         (async () => {
             const { getAuth } = await import("firebase/auth");
@@ -35,7 +37,21 @@ const FirebaseAuthProvider = ({ children }) => {
             (async () => {
                 const { onAuthStateChanged } = await import("firebase/auth");
                 onAuthStateChanged(auth, (user) => {
-                    setCurUser(auth.currentUser);
+                    setCurUser(user);
+                    setProviders(user?.providerData);
+
+                    user.getIdTokenResult()
+                        .then((idTokenResult) => {
+                            const claims = idTokenResult.claims;
+                            console.log(claims);
+                            if (claims.discord_id) {
+                                console.log("discord is linked");
+                                setIsDiscordLinked(true);
+                            }
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        });
 
                     if (user) console.log("User Signed In");
                     else console.log("User Signed out");
@@ -52,15 +68,16 @@ const FirebaseAuthProvider = ({ children }) => {
         linkWithPopup(auth.currentUser, githubProvider)
             .then((result) => {
                 // Accounts successfully linked.
-                console.log("Github Linked");
+                console.log("Github Linked", result);
                 setCurUser(result.user);
+                setProviders(result.user.providerData);
             })
             .catch((error) => {
                 console.log("Error", error);
             });
     };
     const onCode = async (code) => {
-        console.log("code", code);
+        // console.log("code", code);
         const idToken = await getIdToken(auth.currentUser);
         axios
             .post("https://iiitpauth.herokuapp.com/discordauth", {
@@ -72,23 +89,19 @@ const FirebaseAuthProvider = ({ children }) => {
                 curUser
                     .getIdTokenResult()
                     .then((idTokenResult) => {
-                        // Confirm the user is an Admin.
-                        console.log(idTokenResult.claims);
+                        const claims = idTokenResult.claims;
+                        console.log(claims);
+                        if (claims.discord_id) {
+                            console.log("discord linked");
+                            setIsDiscordLinked(true);
+                        }
                     })
                     .catch((error) => {
                         console.log(error);
                     });
             })
             .catch(async (err) => {
-                curUser
-                    .getIdTokenResult()
-                    .then((idTokenResult) => {
-                        // Confirm the user is an Admin.
-                        console.log(idTokenResult.claims);
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
+                window.alert(err.message);
                 console.log("err", err);
             });
     };
@@ -104,6 +117,8 @@ const FirebaseAuthProvider = ({ children }) => {
                 linkGithub,
                 onCode,
                 onClose,
+                providers,
+                isDiscordLinked,
             }}>
             {children}
         </FirebaseAuthContext.Provider>

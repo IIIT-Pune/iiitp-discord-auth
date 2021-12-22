@@ -7,20 +7,23 @@ import GitButton from "../assets/img/Git-Button.svg";
 import { Button } from "react-bootstrap";
 import { FirebaseAuthContext } from "../firebaseContext";
 import OauthPopup from "react-oauth-popup";
-
+import { Redirect } from "react-router-dom";
 const Login = () => {
     const {
         curUser: user,
         signInWithGoogle,
         linkGithub,
+        providers,
         onCode,
         onClose,
+        isDiscordLinked,
     } = useContext(FirebaseAuthContext);
 
-    console.log(user);
+    // console.log(user);
 
     return (
         <div className='Auth page'>
+            {isDiscordLinked && <Redirect to='/authorised' />}
             <h3>IIIT-P Student Authentication</h3>
             <br />
             <br />
@@ -29,8 +32,7 @@ const Login = () => {
                 <div className='user'>
                     <img
                         src={
-                            user?.providerData?.[1]?.photoURL ||
-                            user?.providerData?.[0]?.photoURL
+                            providers?.[1]?.photoURL || providers?.[0]?.photoURL
                         }
                         alt=''
                     />
@@ -38,14 +40,13 @@ const Login = () => {
                 </div>
             )}
             <br />
-            {user?.providerData?.[0] ? (
+            {!providers?.[0] ? (
                 <span id='prompt'>Sign In with Google</span>
-            ) : !user?.providerData?.[1] ? (
+            ) : !providers?.[1] ? (
                 <span id='prompt'>Link with Github</span>
             ) : (
                 <span id='prompt'>Sign In with Discord</span>
             )}
-
             <img src={WhiteHatBlue} className='WhiteHatBlue' alt='' />
             <div className='auth'>
                 <Button
@@ -55,10 +56,10 @@ const Login = () => {
                     <img src={GoogleButton} alt='' />{" "}
                 </Button>
                 <Button
-                    disabled={!!user?.providerData?.[1]}
+                    disabled={!!providers?.[1]}
                     onClick={linkGithub}
                     className={`step git ${
-                        !!user?.providerData?.[1] ? "completed" : ""
+                        !!providers?.[1] ? "completed" : ""
                     }`}>
                     <img src={GitButton} alt='' />{" "}
                 </Button>
@@ -73,7 +74,7 @@ const Login = () => {
                     onClose={onClose}>
                     <Button
                         className={`step discord ${
-                            !!user?.providerData?.[2] ? "completed" : ""
+                            isDiscordLinked ? "completed" : ""
                         } `}>
                         <img src={DiscordButton} alt='' />{" "}
                     </Button>
