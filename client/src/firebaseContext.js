@@ -78,7 +78,7 @@ const FirebaseAuthProvider = ({ children }) => {
     };
     const onCode = async (code) => {
         // console.log("code", code);
-        const idToken = await getIdToken(auth.currentUser);
+        const idToken = await getIdToken(auth.currentUser, true);
         axios
             .post("https://iiitpauth.herokuapp.com/discordauth", {
                 code,
@@ -87,7 +87,7 @@ const FirebaseAuthProvider = ({ children }) => {
             .then((res) => {
                 console.log("res", res);
                 curUser
-                    .getIdTokenResult()
+                    .getIdTokenResult(true)
                     .then((idTokenResult) => {
                         const claims = idTokenResult.claims;
                         console.log(claims);

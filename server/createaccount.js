@@ -40,7 +40,7 @@ const getDiscordUser = async (dToken) => {
 const getRolesArray = (startYear) => {
     const curYear =
         1 + differenceInYears(new Date(), new Date(`20${startYear}-06-01`));
-    const baseRole = "773547829788016732";
+    const baseRoles = ["773547829788016732", "698189158077825126"];
     const roles = {
         18: "698163413838200843",
         19: "698163445924888606",
@@ -53,7 +53,7 @@ const getRolesArray = (startYear) => {
         3: "697802598564102295", // Junior role ID
         4: "697802667497619536", // Senior role ID
     };
-    return [baseRole, roles[startYear], year[curYear]];
+    return [[...baseRoles], roles[startYear], year[curYear]];
 };
 
 const create = async function (idToken, code) {
@@ -73,8 +73,8 @@ const create = async function (idToken, code) {
         email: gUser.providerData[1].email,
     });
 
-    console.log(userClaims, uid, gUser);
-    console.log(dUser); //id,username,discriminator
+    // console.log(userClaims, uid, gUser);
+    // console.log(dUser); //id,username,discriminator
 
     const guildid = "694190268424912936";
 
@@ -92,19 +92,18 @@ const create = async function (idToken, code) {
                 Authorization: `Bot ` + process.env.DISCORD_TOKEN,
             },
         }
-    ).then(async (res) => {
-        await admin
-            .auth()
-            .setCustomUserClaims(uid, {
-                discord_id: dUser.id,
-                discord_refresh_token: dToken.refresh_token,
-            })
-            .catch((err) =>
-                console.log("error occured while setting claims", err)
-            );
-        return res;
-    });
-    console.log("added to server response", res);
+    );
+
+    const claims = {
+        discord_id: dUser.id,
+    };
+    console.log("Added to guild, setting claims", claims, "for", uid);
+    await admin
+        .auth()
+        .setCustomUserClaims(uid, claims)
+        .catch((err) => console.log("error occured while setting claims", err));
+
+    // console.log("added to server response", res);
     if (res.status === 204) {
         fetch(
             `https://discordapp.com/api/v8/guilds/${guildid}/members/${dUser.id}`,
@@ -120,9 +119,7 @@ const create = async function (idToken, code) {
                 },
             }
         )
-            .then(async (res) => {
-                console.log(res);
-            })
+            .then(console.log(res))
             .catch(console.log);
     }
 };
