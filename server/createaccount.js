@@ -85,14 +85,14 @@ const create = async function (idToken, code) {
             body: JSON.stringify({
                 access_token: dToken.access_token,
                 nick: gUser.providerData[0].displayName,
-                roles: roles[batch],
+                roles: roles,
             }),
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bot ` + process.env.DISCORD_TOKEN,
             },
         }
-    ).then(() => {
+    ).then(async (res) => {
         await admin
             .auth()
             .setCustomUserClaims(uid, {
@@ -102,6 +102,7 @@ const create = async function (idToken, code) {
             .catch((err) =>
                 console.log("error occured while setting claims", err)
             );
+        return res;
     });
     console.log("added to server response", res);
     if (res.status === 204) {
@@ -111,7 +112,7 @@ const create = async function (idToken, code) {
                 method: "PATCH",
                 body: JSON.stringify({
                     nick: gUser.providerData[0].displayName,
-                    roles: roles[batch],
+                    roles: roles,
                 }),
                 headers: {
                     "Content-Type": "application/json",
