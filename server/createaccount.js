@@ -92,7 +92,17 @@ const create = async function (idToken, code) {
                 Authorization: `Bot ` + process.env.DISCORD_TOKEN,
             },
         }
-    );
+    ).then(() => {
+        await admin
+            .auth()
+            .setCustomUserClaims(uid, {
+                discord_id: dUser.id,
+                discord_refresh_token: dToken.refresh_token,
+            })
+            .catch((err) =>
+                console.log("error occured while setting claims", err)
+            );
+    });
     console.log("added to server response", res);
     if (res.status === 204) {
         fetch(
@@ -109,17 +119,8 @@ const create = async function (idToken, code) {
                 },
             }
         )
-            .then((res) => {
+            .then(async (res) => {
                 console.log(res);
-                await admin
-                    .auth()
-                    .setCustomUserClaims(uid, {
-                        discord_id: dUser.id,
-                        discord_refresh_token: dToken.refresh_token,
-                    })
-                    .catch((err) =>
-                        console.log("error occured while setting claims", err)
-                    );
             })
             .catch(console.log);
     }
