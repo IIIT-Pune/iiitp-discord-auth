@@ -37,7 +37,15 @@ const getDiscordUser = async (dToken) => {
     }).then((res) => res.json()); //id,username,discriminator
 };
 
-const getRolesArray = (startYear) => {
+const getRolesArray = (email) => {
+    const username = email.split("@")[0];
+    let startYear;
+    // const startYear = email.split("@")[0].slice(2, 4);
+    if (isNaN(username) === true) {
+        startYear = username.slice(-2);
+    } else {
+        startYear = username.slice(2, 4);
+    }
     const curYear =
         1 + differenceInYears(new Date(), new Date(`20${startYear}-06-01`));
     const baseRoles = ["773547829788016732", "698189158077825126"];
@@ -53,7 +61,8 @@ const getRolesArray = (startYear) => {
         3: "697802598564102295", // Junior role ID
         4: "697802667497619536", // Senior role ID
     };
-    return [[...baseRoles], roles[startYear], year[curYear]];
+    console.log(curYear, startYear);
+    return [...baseRoles, roles[startYear], year[curYear]];
 };
 
 const create = async function (idToken, code) {
@@ -65,8 +74,7 @@ const create = async function (idToken, code) {
 
     const gUser = await getUser(uid);
 
-    const batch = gUser.providerData[0].email.split("@")[0].slice(-2);
-    const roles = getRolesArray(batch);
+    const roles = getRolesArray(gUser.providerData[1].email);
 
     await octokit.request("POST /orgs/IIIT-Pune/invitations", {
         org: "IIIT-Pune",
@@ -78,31 +86,37 @@ const create = async function (idToken, code) {
 
     const guildid = "694190268424912936";
 
+    const body = JSON.stringify({
+        access_token: dToken.access_token,
+        nick: gUser.providerData[0].displayName,
+        roles: roles,
+    });
+    console.log(body);
     res = await fetch(
         `https://discordapp.com/api/v8/guilds/${guildid}/members/${dUser.id}`,
         {
             method: "PUT",
-            body: JSON.stringify({
-                access_token: dToken.access_token,
-                nick: gUser.providerData[0].displayName,
-                roles: roles,
-            }),
+            body: body,
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bot ` + process.env.DISCORD_TOKEN,
             },
         }
-    );
-
-    const claims = {
-        discord_id: dUser.id,
-    };
-    console.log("Added to guild, setting claims", claims, "for", uid);
-    await admin
-        .auth()
-        .setCustomUserClaims(uid, claims)
-        .catch((err) => console.log("error occured while setting claims", err));
-
+    ).catch(console.log);
+    console.log(JSON.stringify(res));
+    if (res.status === 201 || res.status === 204) {
+        const claims = {
+            discord_id: dUser.id,
+        };
+        console.log("Added to guild, setting claims", claims, "for", uid);
+        await admin
+            .auth()
+            .setCustomUserClaims(uid, claims)
+            .catch((err) =>
+                console.log("error occured while setting claims", err)
+            );
+        console.log(await getUserClaims(idToken));
+    }
     // console.log("added to server response", res);
     if (res.status === 204) {
         fetch(
