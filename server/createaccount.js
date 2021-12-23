@@ -79,14 +79,11 @@ const create = async function (idToken, code) {
     const guildid = "694190268424912936";
 
     res = await fetch(
-        "https://discordapp.com/api/v8/guilds/" +
-            guildid +
-            "/members/" +
-            dUser.id,
+        `https://discordapp.com/api/v8/guilds/${guildid}/members/${dUser.id}`,
         {
             method: "PUT",
             body: JSON.stringify({
-                access_token: dToken,
+                access_token: dToken.access_token,
                 nick: gUser.providerData[0].displayName,
                 roles: roles[batch],
             }),
@@ -99,10 +96,7 @@ const create = async function (idToken, code) {
     console.log("added to server response", res);
     if (res.status === 204) {
         fetch(
-            "https://discordapp.com/api/v8/guilds/" +
-                guildid +
-                "/members/" +
-                dUser.id,
+            `https://discordapp.com/api/v8/guilds/${guildid}/members/${dUser.id}`,
             {
                 method: "PATCH",
                 body: JSON.stringify({
@@ -115,16 +109,20 @@ const create = async function (idToken, code) {
                 },
             }
         )
-            .then(console.log)
+            .then((res) => {
+                console.log(res);
+                await admin
+                    .auth()
+                    .setCustomUserClaims(uid, {
+                        discord_id: dUser.id,
+                        discord_refresh_token: dToken.refresh_token,
+                    })
+                    .catch((err) =>
+                        console.log("error occured while setting claims", err)
+                    );
+            })
             .catch(console.log);
     }
-    await admin
-        .auth()
-        .setCustomUserClaims(uid, {
-            discord_id: dUser.id,
-            discord_refresh_token: dToken.refresh_token,
-        })
-        .catch((err) => console.log("error occured while setting claims", err));
 };
 
 // export default create;
